@@ -290,11 +290,15 @@ on_put_noise (GSimpleAction *action,
 
   builder = GTK_BUILDER (data);
   image = GTK_IMAGE (gtk_builder_get_object (builder, "image"));
-  p_image = gtk_image_get_pixbuf (image);
-  p_image_noised = get_noised_image_from_image (p_image);
-  gtk_image_set_from_pixbuf (image, p_image_noised);
 
-  g_object_unref (p_image_noised);
+  if (gtk_image_get_storage_type (image) != GTK_IMAGE_EMPTY)
+    {
+      p_image = gtk_image_get_pixbuf (image);
+      p_image_noised = get_noised_image_from_image (p_image);
+      gtk_image_set_from_pixbuf (image, p_image_noised);
+
+      g_object_unref (p_image_noised);
+    }
 }
 
 static GActionEntry builder_entries[] =
@@ -332,7 +336,7 @@ setup_menu (GtkBuilder *builder)
   menu = g_menu_new ();
   g_menu_append (menu, "Загрузить изображения в базу", "win.load_images");
   g_menu_append (menu, "Очистить базу", "win.clear_dbase");
-  g_menu_append (menu, "Добавить шум", "win.put_noise");
+  g_menu_append (menu, "Добавить искажение", "win.put_noise");
   gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (menu_button),
                                   G_MENU_MODEL (menu));
 }
