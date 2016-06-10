@@ -297,6 +297,8 @@ get_noised_image_from_image (const GdkPixbuf *image)
   cvResetImageROI (ipl_transformed);
 
   res = ipl2pixbuf (ipl_transformed);
+  
+  rand_value_generator_release (&generator);
 
   cvReleaseImage (&ipl_orig);
   cvReleaseImage (&ipl_scaled);
