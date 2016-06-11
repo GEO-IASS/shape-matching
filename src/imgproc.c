@@ -263,13 +263,15 @@ get_noised_image_from_image (const GdkPixbuf *image)
 
   crop (image, &roi.x, &roi.y, &roi.width, &roi.height);
 
+  ipl_orig = pixbuf2ipl (image);
+
   scale_ratio = rand_value_generator_get_next_double (generator,
                                                       MIN_SCALE_RATIO,
                                                       MAX_SCALE_RATIO);
-  new_width = floor ((double)roi.width * scale_ratio);
-  new_height = floor ((double)roi.height * scale_ratio);
-
-  ipl_orig = pixbuf2ipl (image);
+  new_width = (new_width = floor ((double)roi.width * scale_ratio)) > ipl_orig->width ? ipl_orig->width - 1 :
+                                                                                        new_width;
+  new_height = (new_height = floor ((double)roi.height * scale_ratio)) > ipl_orig->height ? ipl_orig->height - 1 :
+                                                                                            new_height;
 
   ipl_scaled = cvCreateImage (cvSize (new_width, new_height),
                               ipl_orig->depth,
